@@ -124,15 +124,52 @@ def m(t):
                 kw.append(ok.strip())
         
     return kw
-
-@app.route("/api/keyword")
-@app.route("/api/keyword")
+@app.route("/api/keyword/all")
+@app.route("/api/keyword/all/")
 def keywordapi():
     if request.args.get("q"):
         kw=[]
         q=request.args.get("q")
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(m, q)
+            kw = future.result()
+        return jsonify(status=True, data=kw)
+    else:
+        return jsonify(status=False, data=None)
+@app.route("/api/keyword/youtube")
+@app.route("/api/keyword/youtube/")
+def ytkeywordapi():
+    if request.args.get("q"):
+        kw=[]
+        q=request.args.get("q")
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(searchYouTube, q)
+            kw = future.result()
+        return jsonify(status=True, data=kw)
+    else:
+        return jsonify(status=False, data=None)
+
+@app.route("/api/keyword/google")
+@app.route("/api/keyword/google/")
+def gkeywordapi():
+    if request.args.get("q"):
+        kw=[]
+        q=request.args.get("q")
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(searchGoogle, q)
+            kw = future.result()
+        return jsonify(status=True, data=kw)
+    else:
+        return jsonify(status=False, data=None)
+
+@app.route("/api/keyword/amazon")
+@app.route("/api/keyword/amazon/")
+def akeywordapi():
+    if request.args.get("q"):
+        kw=[]
+        q=request.args.get("q")
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            future = executor.submit(searchAmazon, q)
             kw = future.result()
         return jsonify(status=True, data=kw)
     else:
