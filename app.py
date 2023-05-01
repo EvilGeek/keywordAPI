@@ -92,7 +92,6 @@ def searchYouTube(q):
         return []
  
 
-
 def m(t):
     kw=[]
     h=searchYouTube(t)
@@ -124,6 +123,50 @@ def m(t):
                 kw.append(ok.strip())
         
     return kw
+
+
+def searchyt(t):
+    kw=[]
+    h=searchYouTube(t)
+    for ok in h:
+        kw.append(ok.strip())
+    for i in ends:
+        q1=t+" "+i
+        h=searchYouTube(q1)
+        for ok in h:
+            if ok.strip() not in kw:
+                kw.append(ok.strip())
+        
+    return kw
+
+def searchg(t):
+    kw=[]
+    h=searchGoogle(t)
+    for ok in h:
+        kw.append(ok.strip())
+    for i in ends:
+        q1=t+" "+i
+        h=searchYouTube(q1)
+        for ok in h:
+            if ok.strip() not in kw:
+                kw.append(ok.strip())
+        
+    return kw
+
+def searcha(t):
+    kw=[]
+    h=searchAmazon(t)
+    for ok in h:
+        kw.append(ok.strip())
+    for i in ends:
+        q1=t+" "+i
+        h=searchYouTube(q1)
+        for ok in h:
+            if ok.strip() not in kw:
+                kw.append(ok.strip())
+        
+    return kw
+
 @app.route("/api/keyword/all")
 @app.route("/api/keyword/all/")
 def keywordapi():
@@ -136,6 +179,7 @@ def keywordapi():
         return jsonify(status=True, data=kw)
     else:
         return jsonify(status=False, data=None)
+
 @app.route("/api/keyword/youtube")
 @app.route("/api/keyword/youtube/")
 def ytkeywordapi():
@@ -143,7 +187,7 @@ def ytkeywordapi():
         kw=[]
         q=request.args.get("q")
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            future = executor.submit(searchYouTube, q)
+            future = executor.submit(searchyt, q)
             kw = future.result()
         return jsonify(status=True, data=kw)
     else:
@@ -156,7 +200,7 @@ def gkeywordapi():
         kw=[]
         q=request.args.get("q")
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            future = executor.submit(searchGoogle, q)
+            future = executor.submit(searchg, q)
             kw = future.result()
         return jsonify(status=True, data=kw)
     else:
@@ -169,7 +213,7 @@ def akeywordapi():
         kw=[]
         q=request.args.get("q")
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            future = executor.submit(searchAmazon, q)
+            future = executor.submit(searcha, q)
             kw = future.result()
         return jsonify(status=True, data=kw)
     else:
